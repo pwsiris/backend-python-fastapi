@@ -3,6 +3,7 @@ from types import SimpleNamespace
 
 import yaml
 from aiofile import async_open
+from pydantic import PostgresDsn
 
 
 class YamlConfigManager:
@@ -15,7 +16,7 @@ class YamlConfigManager:
             try:
                 await self._update(config)
             except Exception as e:
-                print(f"Failed to update config, see you next time \n{repr(e)}")
+                print(f"Failed to update config, \n{repr(e)}")
             await asyncio.sleep(self._update_interval)
 
     async def _init(self, config):
@@ -23,7 +24,14 @@ class YamlConfigManager:
             data = yaml.safe_load(await f.read())
 
             database = data["database"]
-            config.DB_CONNECTION_STRING = f"postgresql+asyncpg://{database['user']}:{database['password']}@{database['host']}:{database['port']}/{database['database']}"
+            config.DB_CONNECTION_STRING = PostgresDsn.build(
+                scheme="postgresql+asyncpg",
+                user=database["user"],
+                password=database["password"],
+                host=database["host"],
+                port=database["port"],
+                path=f"/{database['database']}",
+            )
 
             admin = data["admin"]
             config.ADMIN_LOGIN = admin["login"]

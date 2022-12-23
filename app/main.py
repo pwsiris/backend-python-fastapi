@@ -22,10 +22,10 @@ async def shutdown():
 if __name__ == "__main__":
     parser = ArgumentParser(description="FastAPI backend")
     parser.add_argument(
-        "-H", "--Host", required=True, action="store", dest="host", help="Server host"
+        "-H", "--host", required=True, action="store", dest="host", help="Server host"
     )
     parser.add_argument(
-        "-P", "--Port", required=True, action="store", dest="port", help="Server port"
+        "-P", "--port", required=True, action="store", dest="port", help="Server port"
     )
 
     args = parser.parse_args()
