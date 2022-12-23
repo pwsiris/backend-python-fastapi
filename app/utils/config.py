@@ -16,7 +16,7 @@ class YamlConfigManager:
             try:
                 await self._update(config)
             except Exception as e:
-                print(f"Failed to update config, \n{repr(e)}")
+                print(f"Failed to update config\n{repr(e)}")
             await asyncio.sleep(self._update_interval)
 
     async def _init(self, config):
@@ -29,7 +29,7 @@ class YamlConfigManager:
                 user=database["user"],
                 password=database["password"],
                 host=database["host"],
-                port=database["port"],
+                port=str(database["port"]),
                 path=f"/{database['database']}",
             )
 
@@ -47,6 +47,7 @@ class YamlConfigManager:
             security = data["security"]
             config.TOKEN_SECRET_KEY = security["token_secret_key"]
             config.TOKEN_NAME = security["token_name"]
+            config.EXPIRE_TIME = security["expire_time"]
 
     async def start(self, config):
         self._update_task = asyncio.ensure_future(self._update_loop(config))
