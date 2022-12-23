@@ -1,0 +1,21 @@
+version:
+
+domain:
+
+update_interval:
+
+security:
+    token_secret_key:
+    token_name:
+    expire_time:
+
+admin:
+    login:
+    password:
+
+database:
+    host:
+    port:
+    user:
+    password:
+    database:
