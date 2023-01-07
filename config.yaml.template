@@ -19,3 +19,5 @@ database:
     user:
     password:
     database:
+
+discord_hook_url:

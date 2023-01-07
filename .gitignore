@@ -130,4 +130,5 @@ dmypy.json
 
 
 # Project side ignore
+config.yaml
 app/config.yaml

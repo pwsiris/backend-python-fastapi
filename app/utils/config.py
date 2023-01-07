@@ -3,13 +3,15 @@ from types import SimpleNamespace
 
 import yaml
 from aiofile import async_open
+
+# from aiofiles import open as async_open
 from pydantic import PostgresDsn
 
 
 class YamlConfigManager:
     def __init__(self, interval):
         self._update_interval = interval
-        self._config_file = "config.yaml"
+        self._config_file = "app/config.yaml"
 
     async def _update_loop(self, config):
         while True:
@@ -20,6 +22,7 @@ class YamlConfigManager:
             await asyncio.sleep(self._update_interval)
 
     async def _init(self, config):
+        # async with async_open(self._config_file, mode='r') as f:
         async with async_open(self._config_file, "r") as f:
             data = yaml.safe_load(await f.read())
 
@@ -27,8 +30,8 @@ class YamlConfigManager:
             config.DB_CONNECTION_STRING = PostgresDsn.build(
                 scheme="postgresql+asyncpg",
                 user=database["user"],
-                password=database["password"],
-                host=database["host"],
+                password=str(database["password"]),
+                host=str(database["host"]),
                 port=str(database["port"]),
                 path=f"/{database['database']}",
             )
@@ -38,6 +41,7 @@ class YamlConfigManager:
             config.ADMIN_PASSWORD = admin["password"]
 
     async def _update(self, config):
+        # async with async_open(self._config_file, mode='r') as f:
         async with async_open(self._config_file, "r") as f:
             data = yaml.safe_load(await f.read())
 
@@ -48,6 +52,8 @@ class YamlConfigManager:
             config.TOKEN_SECRET_KEY = security["token_secret_key"]
             config.TOKEN_NAME = security["token_name"]
             config.EXPIRE_TIME = security["expire_time"]
+
+            config.DISCORD_HOOK_URL = data["discord_hook_url"]
 
     async def start(self, config):
         self._update_task = asyncio.ensure_future(self._update_loop(config))
