@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.get("/timecode")
-async def timecode(title: str, uptime: str, user_name: str):
+async def timecode(title: str, uptime: str, user_name: str, description: str = ""):
     async with httpx.AsyncClient() as ac:
         json = {
             "embeds": [
@@ -22,6 +22,8 @@ async def timecode(title: str, uptime: str, user_name: str):
                 }
             ]
         }
+        if description:
+            json["embeds"][0]["description"] = description
         answer = await ac.post(cfg.DISCORD_HOOK_URL, json=json)
     message = "Timecode saved to discord"
     if answer.status_code < 200 or answer.status_code >= 300:
