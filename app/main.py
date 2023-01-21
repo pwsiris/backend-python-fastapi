@@ -16,14 +16,13 @@ async def startup():
     await ConfigManager.start(cfg)
     print("INFO:\tConfig was loaded")
 
-    from db import check_db
+    from db.utils import check_db
 
     await check_db()
 
-    from api import test, twitch_bot
+    from api import routers
 
-    FastAPP.include_router(test.router, prefix="/tests")
-    FastAPP.include_router(twitch_bot.router, prefix="/twitch_bot")
+    FastAPP.include_router(routers.routers)
 
 
 @FastAPP.on_event("shutdown")

@@ -10,6 +10,10 @@ pyyaml
 SQLAlchemy
 uvicorn
 
+alembic
+alembic-utils
+psycopg2-binary
+
 pre-commit>=2.0.0
 black>=22.3.0
 isort>=5.10.1

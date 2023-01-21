@@ -12,6 +12,16 @@ _engine = create_async_engine(cfg.DB_CONNECTION_STRING, future=True)
 _session = sessionmaker(_engine, expire_on_commit=False, class_=AsyncSession)
 
 
+async def get_session():
+    async with AsyncSession(_engine, expire_on_commit=False) as session:
+        yield session
+
+
+async def get_session_2():
+    async with _session() as session:
+        yield session
+
+
 # @asynccontextmanager
 # async def get_session():
 #     session = _session()
@@ -23,13 +33,3 @@ _session = sessionmaker(_engine, expire_on_commit=False, class_=AsyncSession)
 #         raise
 #     finally:
 #         session.close()
-
-
-async def get_session():
-    async with AsyncSession(_engine, expire_on_commit=False) as session:
-        yield session
-
-
-async def get_session_2():
-    async with _session() as session:
-        yield session
